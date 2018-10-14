@@ -2,6 +2,12 @@
 
 Read recent n-days Pinboard links, which have a tag `recommended`, and generate digested Markdown files.
 
+## Prerequisites
+
+- GNU Make
+- [direnv](https://direnv.net/)
+- Docker
+
 ## Usage
 
 Run 
@@ -24,5 +30,12 @@ then check Markdown files in `output` directory.
 
 ## Helpful resources
 
-- Sample files [commonmark.md](output/commonmark.md) and [digest.md](output/digest.md)
+You can find sample files from the directory [`records/`](records).
+
 - [btbytes/pinlinks](https://github.com/btbytes/pinlinks)
+
+## TODO & Issues
+
+- [ ] [Wordpress Gutenberg](https://wordpress.org/gutenberg/) editor can not properly handle `blockquote` in a list item.
+- [ ] Generate a random cover image. [Unsplash](http://unsplash.com/) might be useful for this purpose.
+
