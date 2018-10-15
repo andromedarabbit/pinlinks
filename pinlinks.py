@@ -13,6 +13,8 @@ import json
 import re
 
 
+re_blockquotes = re.compile(r'^(\s+>|>)\s+(.*)$', re.MULTILINE)
+
 def main(api_token, d=7):
     username, key = api_token.split(':')
 
@@ -30,7 +32,9 @@ def main(api_token, d=7):
     print('')
     print('''**기간**: %s ~ %s''' % (days_ago.isoformat(), today.isoformat()))
     print('')
-    
+
+    re_blockquotes = re.compile(r'^(\s+>|>)\s+(.*)$', re.MULTILINE)
+
     # Not note
     pure_posts = [post for post in posts if not post.url.startswith('https://notes.pinboard.in/u:' + username)]
 
@@ -86,6 +90,8 @@ def get_desc(extended, as_listitem=False):
     text = re.sub(r'(^|[^@\w])@(\w{1,15})\b', r'\1<code>@\2</code>', text)
     if as_listitem:
         text = '\t' + text.replace('\n', '\n\t')
+        text = re_blockquotes.sub(r'"\2"', text)
+
     return text
 
 if __name__ == '__main__':
