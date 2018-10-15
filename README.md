@@ -37,5 +37,5 @@ You can find sample files from the directory [`records/`](records).
 ## TODO & Issues
 
 - [x] [Wordpress Gutenberg](https://wordpress.org/gutenberg/) editor can not properly handle `blockquote` in a list item.
-- [ ] Generate a random cover image. [Unsplash](http://unsplash.com/) might be useful for this purpose.
+- [x] Generate a random cover image. [Unsplash](http://unsplash.com/) might be useful for this purpose.
 

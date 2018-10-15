@@ -15,7 +15,7 @@ import re
 
 re_blockquotes = re.compile(r'^(\s+>|>)\s+(.*)$', re.MULTILINE)
 
-def main(api_token, d=7):
+def main(api_token, d=7, no_random_cover_image=False):
     username, key = api_token.split(':')
 
     today = datetime.date.today()
@@ -30,8 +30,11 @@ def main(api_token, d=7):
 
     print('''# ICYMI 웹 탐험 – %s''' % (today.strftime('%Y년 %m월 %d일')))
     print('')
-    print('''**기간**: %s ~ %s''' % (days_ago.isoformat(), today.isoformat()))
-    print('')
+
+    if not no_random_cover_image:
+        print('![](https://unsplash.it/1920/1080/?random)')
+        print('''**기간**: %s ~ %s''' % (days_ago.isoformat(), today.isoformat()))
+        print('')
 
     re_blockquotes = re.compile(r'^(\s+>|>)\s+(.*)$', re.MULTILINE)
 
@@ -99,5 +102,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='pinlinks')
     parser.add_argument('-t', dest='api_token', type=str, help='API token')
     parser.add_argument('-d', dest='days', type=int, help='Since n days')
+    parser.add_argument('-n', dest='no_random_cover_image', type=int, help='No random cover image')
     args = parser.parse_args()
-    main(args.api_token, args.days)
+    main(args.api_token, args.days, args.no_random_cover_image)
