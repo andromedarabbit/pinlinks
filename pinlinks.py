@@ -12,10 +12,32 @@ import sys
 import json
 import re
 
+class PinPost(object):
+ 
+    def __init__(self, pinboard.Post):
+        self.__init__(url, description, extended)
+
+    def __init__(self, url, description, extended):
+        self._url = url
+        self._description = description
+        self._extended = extended
+ 
+    def __repr__(self):
+        return 'Point(%r, %r)' % (self._x, self._y)
+ 
+    def __eq__(self, other):
+        if not isinstance(other, Point):
+            return False
+        return self._x == other._x and self._y == other._y
+ 
+    def __hash__(self): 
+        return hash(self._x) ^ hash(self._y)
+ 
+
 
 re_blockquotes = re.compile(r'^(\s+>|>)\s+(.*)$', re.MULTILINE)
 
-def main(api_token, from_date, to_date=datetime.date.today(), no_random_cover_image=False):
+def main(api_token, tags, from_date, to_date=datetime.date.today(), no_random_cover_image=False):
     username, key = api_token.split(':')
 
     days = (to_date - from_date).days
@@ -23,8 +45,16 @@ def main(api_token, from_date, to_date=datetime.date.today(), no_random_cover_im
         print('Invalid date range', file=sys.stderr)
         sys.exit(1)
 
+    # print(args.tags)
+    # sys.exit(1)
+
     pb = pinboard.Pinboard(api_token)
-    posts = pb.posts.all(tag=["recommended"], results=100, fromdt=from_date)
+    # posts = pb.posts.all(tag=tags, results=100, fromdt=from_date)
+    posts = []
+    for tag in tags: 
+        posts = posts + pb.posts.all(tag=tag, results=100, fromdt=from_date)
+    # posts = list({post: post for post in posts})
+    posts = list(set(posts))
     
     if not posts:
         print('No articles found!', file=sys.stderr)
@@ -39,7 +69,7 @@ def main(api_token, from_date, to_date=datetime.date.today(), no_random_cover_im
     print('''**기간**: %s ~ %s''' % (from_date.isoformat(), to_date.isoformat()))
     print('')
 
-    re_blockquotes = re.compile(r'^(\s+>|>)\s+(.*)$', re.MULTILINE)
+    # re_blockquotes = re.compile(r'^(\s+>|>)\s+(.*)$', re.MULTILINE)
 
     # Not note
     pure_posts = [post for post in posts if not post.url.startswith('https://notes.pinboard.in/u:' + username)]
@@ -106,9 +136,17 @@ if __name__ == '__main__':
     parser.add_argument('-A', dest='api_token', type=str, help='API token')
     parser.add_argument('-f', dest='from_date', type=str, help='From')
     parser.add_argument('-t', dest='to_date', type=str, help='To')
+    parser.add_argument('-T', dest='tags', type=str, help='Comma-separated tags')
     parser.add_argument('-N', dest='no_random_cover_image', type=bool, help='No random cover image')
     args = parser.parse_args()
 
+    # print(args.tags)
+    # sys.exit(1)
+    tags = [x.strip() for x in args.tags.split(',')]
+    # tags = [ "recommended" ]
+    if not tags:
+        tags = [ "recommended" ]
+
     from_date = datetime.datetime.strptime(args.from_date, '%Y-%m-%d').date()
     to_date = datetime.datetime.strptime(args.to_date, '%Y-%m-%d').date()
-    main(args.api_token, from_date, to_date, args.no_random_cover_image)
+    main(args.api_token, tags, from_date, to_date, args.no_random_cover_image)

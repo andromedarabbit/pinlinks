@@ -13,13 +13,14 @@ Read recent n-days Pinboard links, which have a tag `recommended`, and generate 
 Run 
 
 ``` bash
-make PINBOARD_TOKEN="MY_PINBOARD_API_TOKEN" FROM_DATE="2018-10-13" TO_DATE="2018-10-15"
+make PINBOARD_TOKEN="MY_PINBOARD_API_TOKEN" TAGS="recommended, starred" FROM_DATE="2018-10-13" TO_DATE="2018-10-15"
 ```
 
 or 
 
 ``` bash
 export PINBOARD_TOKEN="MY_PINBOARD_API_TOKEN"
+export TAGS="recommended, starred"
 export FROM_DATE="2018-10-13"
 export TO_DATE="2018-10-15"
 make
