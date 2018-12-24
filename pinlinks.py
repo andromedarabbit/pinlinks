@@ -44,6 +44,10 @@ def main(api_token, tags, from_date, to_date=datetime.date.today(), no_random_co
         print('![]({})'.format(r.url))
         print('')
 
+     if not no_credit:
+        print('''> 이 글은 [GitHub - andromedarabbit/pinlinks: Generate a markdown blog post from recent pinboard bookmarks](https://github.com/andromedarabbit/pinlinks)로 자동생성하였습니다''')
+        print('')
+
     print('''**기간**: %s ~ %s''' % (from_date.isoformat(), to_date.isoformat()))
     print('')
 
@@ -97,10 +101,6 @@ def main(api_token, tags, from_date, to_date=datetime.date.today(), no_random_co
                 print('%s' % (desc, ))
           
     print('')
-
-    if not no_credit:
-        print('''> 이 글은 [GitHub - andromedarabbit/pinlinks: Generate a markdown blog post from recent pinboard bookmarks](https://github.com/andromedarabbit/pinlinks)로 자동생성하였습니다''')
-        print('')
 
 def get_desc(extended, as_listitem=False):
     # Remove emtpy lines
