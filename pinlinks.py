@@ -15,6 +15,7 @@ import requests
 
 
 re_blockquotes = re.compile(r'^(\s+>|>)\s+(.*)$', re.MULTILINE)
+re_blockquotes_html = re.compile(r'^(\s+<|<)blockquote>(.*)(\s+<\/|<\/)blockquote>\s*$', re.MULTILINE | re.IGNORECASE)
 
 def main(api_token, tags, from_date, to_date=datetime.date.today(), no_random_cover_image=False, no_credit=False):
     username, key = api_token.split(':')
@@ -26,12 +27,12 @@ def main(api_token, tags, from_date, to_date=datetime.date.today(), no_random_co
 
     pb = pinboard.Pinboard(api_token)
     unique_posts = {}
-    for tag in tags: 
+    for tag in tags:
         posts = pb.posts.all(tag=tag, results=100, fromdt=from_date)
         for post in posts:
             unique_posts.update({post.url: post})
     posts = unique_posts.values()
-    
+
     if not posts:
         print('No articles found!', file=sys.stderr)
         sys.exit(1)
@@ -44,7 +45,7 @@ def main(api_token, tags, from_date, to_date=datetime.date.today(), no_random_co
         print('![]({})'.format(r.url))
         print('')
 
-     if not no_credit:
+    if not no_credit:
         print('''> 이 글은 [GitHub - andromedarabbit/pinlinks: Generate a markdown blog post from recent pinboard bookmarks](https://github.com/andromedarabbit/pinlinks)로 자동생성하였습니다''')
         print('')
 
@@ -99,7 +100,7 @@ def main(api_token, tags, from_date, to_date=datetime.date.today(), no_random_co
             if text:
                 desc = get_desc(text)
                 print('%s' % (desc, ))
-          
+
     print('')
 
 def get_desc(extended, as_listitem=False):
@@ -107,8 +108,9 @@ def get_desc(extended, as_listitem=False):
     text = "".join([s for s in extended.splitlines(True) if s.strip()])
     text = re.sub(r'(^|[^@\w])@(\w{1,15})\b', r'\1<code>@\2</code>', text)
     if as_listitem:
-        text = '\t' + text.replace('\n', '\n\t')
         text = re_blockquotes.sub(r'"\2"', text)
+        text = re_blockquotes_html.sub(r'"\2"', text)
+        text = '\t' + text.replace('\n', '\n\t')
 
     return text
 
