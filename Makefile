@@ -16,14 +16,14 @@ all:
 
 	docker run -it --rm --name my-running-script -v "$$PWD":/usr/src/myapp -w /usr/src/myapp python:3 sh -c 'pip install -r requirements.txt && python pinlinks.py -A $(PINBOARD_TOKEN) -T "$(TAGS)" -f $(FROM_DATE) -t $(TO_DATE) -N $(NO_RANDOM_COVER_IMAGE) -n $(NO_CREDIT) | tee $(OUTPUT_DIR)/$(TITLE).md'
 
-	type cmark-gfm >> /dev/null || brew install cmark-gfm 
-	cmark-gfm -t commonmark -e autolink --hardbreaks $(OUTPUT_DIR)/$(TITLE).md | tee $(OUTPUT_DIR)/$(TITLE)-commonmark.md 
-	cmark-gfm -t html $(OUTPUT_DIR)/$(TITLE)-commonmark.md | tee $(OUTPUT_DIR)/$(TITLE)-commonmark.html 
+	type cmark-gfm >> /dev/null || brew install cmark-gfm
+	cmark-gfm -t commonmark -e autolink --hardbreaks $(OUTPUT_DIR)/$(TITLE).md | tee $(OUTPUT_DIR)/$(TITLE)-commonmark.md
+	cmark-gfm -t html $(OUTPUT_DIR)/$(TITLE)-commonmark.md | tee $(OUTPUT_DIR)/$(TITLE)-commonmark.html
 	cat $(OUTPUT_DIR)/$(TITLE)-commonmark.md | pbcopy
 
 	cp -f $(OUTPUT_DIR)/* $(RECORD_DIR)
 
-	 @/bin/echo -n "$(TO_DATE)" > "records/.last_recorded_at"
+	@/bin/echo -n "$(TO_DATE)" > "records/.last_recorded_at"
 
 .PHONY: clean
 clean:
